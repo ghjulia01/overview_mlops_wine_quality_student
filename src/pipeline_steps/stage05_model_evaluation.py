@@ -16,40 +16,10 @@ class ModelEvaluationTrainingPipeline:
         pass
 
     def main(self):
-        try:
-            # Initialize configuration manager
-            config = ConfigurationManager()
-
-            # Try to obtain the model evaluation config from ConfigurationManager.
-            # Adjust the method name below to match your ConfigurationManager implementation.
-            if hasattr(config, "get_model_evaluation_config"):
-                model_eval_config = config.get_model_evaluation_config()
-            elif hasattr(config, "get_model_eval_config"):
-                model_eval_config = config.get_model_eval_config()
-            else:
-                # Fallback: pass the whole config object to ModelEvaluation if that is how it's designed
-                model_eval_config = config
-
-            # Instantiate the ModelEvaluation with the config
-            model_evaluator = ModelEvaluation(model_eval_config)
-
-            # Call a plausible entry point on the ModelEvaluation instance.
-            # Update these method names to match your ModelEvaluation API.
-            if hasattr(model_evaluator, "initiate_model_evaluation"):
-                model_evaluator.initiate_model_evaluation()
-            elif hasattr(model_evaluator, "start_model_evaluation"):
-                model_evaluator.start_model_evaluation()
-            elif hasattr(model_evaluator, "evaluate"):
-                model_evaluator.evaluate()
-            else:
-                raise AttributeError(
-                    "ModelEvaluation instance has no known entry method. "
-                    "Expected one of: 'initiate_model_evaluation', 'start_model_evaluation', 'evaluate'."
-                )
-
-        except Exception as e:
-            logger.exception(f"Exception in {STAGE_NAME}: {e}")
-            raise
+        config = ConfigurationManager()
+        model_evaluation_config = config.get_model_evaluation_config()
+        model_evaluation = ModelEvaluation(config = model_evaluation_config)
+        model_evaluation.log_into_mlflow()
 
 if __name__ == '__main__':
     try:
