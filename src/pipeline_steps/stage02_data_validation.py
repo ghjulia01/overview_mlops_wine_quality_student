@@ -16,29 +16,15 @@ class DataValidationTrainingPipeline:
         pass
 
     def main(self):
-        # Create configuration manager
         config = ConfigurationManager()
-
-        # Instantiate the DataValidation component and run it.
-        # Replace 'initiate_data_validation' with the actual method name used in your DataValidation class
-        data_validation = DataValidation(config=config)
-        try:
-            data_validation.initiate_data_validation()
-        except AttributeError:
-            # Fallback to a commonly used alternative name if present
-            if hasattr(data_validation, "validate"):
-                data_validation.validate()
-            else:
-                # Re-raise with a clearer message to help debugging
-                raise AttributeError(
-                    "DataValidation instance has no 'initiate_data_validation' or 'validate' method. "
-                    "Check the DataValidation class interface."
-                )
+        data_validation_config = config.get_data_validation_config()
+        data_validation = DataValidation(config=data_validation_config)
+        data_validation.validate_all_columns()
 
 if __name__ == '__main__':
     try:
         logger.info(f">>>>> stage {STAGE_NAME} started <<<<<")
-        obj = DataValidationTrainingPipeline()
+        obj =  DataValidationTrainingPipeline()
         obj.main()
         logger.info(f">>>>> stage {STAGE_NAME} completed <<<<<\n\nx=======x")
     except Exception as e:
